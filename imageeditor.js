@@ -649,7 +649,7 @@ ImageEditor.prototype.cropImage = function(callback) {
 
   // XXX: tweak these to make sure we still have the right aspect ratio
   // after rounding to pixels
-  console.error('Maintain aspect ratio precisely!!!');
+  //console.error('Maintain aspect ratio precisely!!!');
 
   // And update the real crop region
   this.source.x += left;

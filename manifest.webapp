@@ -1,0 +1,7 @@
+{
+  "name": "ImageEditor",
+  "version": "0.0.1",
+  "description": "Image Editor",
+  "launch_path": "/index.html",
+  "default_locale": "en"
+}
