@@ -3,6 +3,31 @@
   https://github.com/mozilla-b2g/gaia/blob/master/apps/gallery/js/ImageEditor.js
 */
 
+function createThumbnailFromSource(fullSizeImage, sourceRectangle,
+                                    containerWidth, containerHeight, callback) {
+  // Create a thumbnail image
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d');
+
+  // infer the thumbnailHeight such that the aspect ratio stays the same
+  var scalex = containerWidth / sourceRectangle.w;
+  var scaley = containerHeight / sourceRectangle.h;
+  var scale = Math.min(Math.min(scalex, scaley), 1);
+
+  var thumbnailWidth = Math.floor(sourceRectangle.w * scale);
+  var thumbnailHeight = Math.floor(sourceRectangle.h * scale);
+
+  canvas.width = thumbnailWidth;
+  canvas.height = thumbnailHeight;
+  // Draw that region of the image into the canvas, scaling it down
+  context.drawImage(fullSizeImage, sourceRectangle.x, sourceRectangle.y,
+                    sourceRectangle.w, sourceRectangle.h,
+                    0, 0, thumbnailWidth, thumbnailHeight);
+
+  canvas.toBlob(callback, 'image/jpeg');
+  return scale;
+}
+
 /*
  * ImageEditor.js: simple image editing and previews in a <canvas> element.
  *
@@ -53,13 +78,15 @@ function ImageEditor(imageURL, container, edits, ready) {
   this.previewCanvas = document.createElement('canvas');
   this.previewCanvas.id = 'edit-preview-canvas'; // for stylesheet
   this.container.appendChild(this.previewCanvas);
-  this.previewCanvas.width = this.previewCanvas.clientWidth;
-  this.previewCanvas.height = this.previewCanvas.clientHeight;
+  //this.previewCanvas.width = this.previewCanvas.clientWidth;
+  //this.previewCanvas.height = this.previewCanvas.clientHeight;
+  this.previewCanvas.width = container.clientWidth;
+  this.previewCanvas.height = container.clientHeight;
   this.processor = new ImageProcessor(this.previewCanvas);
 
   // prepare gesture detector for ImageEditor
-  this.gestureDetector = new GestureDetector(container);
-  this.gestureDetector.startDetecting();
+  //this.gestureDetector = new GestureDetector(container);
+  //this.gestureDetector.startDetecting();
 
   // preset the scale to something useful in case resize() gets called
   // before generateNewPreview()
